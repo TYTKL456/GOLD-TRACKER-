@@ -19,15 +19,23 @@ st.markdown(
 )
 st.divider()
 
-# 1. Fetching Live Market Standard Data using Yahoo Finance Gold Futures (GC=F)
+# 1. Fetching Live Market Standard Data using Yahoo Finance Gold Futures (GC=F) & FX Rate (INR=X)
 try:
     gold_ticker = gold_data.Ticker("GC=F")
     todays_data = gold_ticker.history(period="1d")
     market_price_usd = (
         todays_data["Close"].iloc[-1] if not todays_data.empty else 2350.00
     )
-    # Conversion factor to INR per gram
-    market_price_inr = round(market_price_usd * 86.5 / 31.1035, 2)
+    
+    # Fetch live USD/INR exchange rate dynamically
+    fx_ticker = gold_data.Ticker("INR=X")
+    fx_data = fx_ticker.history(period="1d")
+    usd_inr_rate = (
+        fx_data["Close"].iloc[-1] if not fx_data.empty else 86.50
+    )
+
+    # Conversion factor to INR per gram (1 Troy Ounce = 31.1035 Grams)
+    market_price_inr = round((market_price_usd * usd_inr_rate) / 31.1035, 2)
 except:
     market_price_inr = 15236.00  # Fallback safety buffer
 
@@ -111,16 +119,18 @@ with col_input_2:
             delta_color="inverse",
         )
 
-# 4. Diplomatic Timing Advisory Range (Value-add for users)
+# 4. Strategic Buying Window & Market Guidance
 st.markdown("### 💡 Strategic Buying Window & Market Guidance")
 st.info(
-    f"**Diplomatic Market Outlook:** While precise bottom-fishing dates cannot be mathematically guaranteed due to global macroeconomic volatility, statistical indicators show that a **near-term consolidation range (expected over the coming 4 to 8 weeks)** typically offers optimal entry points near support floors. Rather than buying all at once during sharp upward momentum, a phased accumulation approach within dip ranges optimizes overall cost averages."
+    "**Strategic Market Outlook:** While precise bottom-fishing dates cannot be mathematically guaranteed due to global macroeconomic volatility, statistical indicators show that a **near-term consolidation range (expected over the coming 4 to 8 weeks)** typically offers optimal entry points near support floors. Rather than buying all at once during sharp upward momentum, a phased accumulation approach within dip ranges optimizes overall cost averages."
 )
 
 # 5. Interactive Historical Trend Line Chart
 st.markdown("### 📈 Past 1-Year Gold Price Trend & Volatility Curve")
 if not hist_df.empty:
+    # Use the same dynamic exchange rate for historical chart alignment
+    current_fx = usd_inr_rate if 'usd_inr_rate' in locals() else 86.5
     chart_data = pd.DataFrame(
-        {"Gold Price (₹/g)": (hist_df["Close"] * 86.5 / 31.1035)}
+        {"Gold Price (₹/g)": (hist_df["Close"] * current_fx / 31.1035)}
     )
     st.line_chart(chart_data, color="#FFD700")
