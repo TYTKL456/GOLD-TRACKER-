@@ -39,7 +39,7 @@ try:
     
     # Indian Domestic Pricing Factor: Incorporating ~15% total import duty, baseline levies, 
     # and local bullion market adjustments to sync with standard Indian retail boards (~₹15,300/g)
-    indian_tax_multiplier = 1.145 
+    indian_tax_multiplier = 1.1336 
     market_price_inr = round(base_inr_gram * indian_tax_multiplier, 2)
 except:
     market_price_inr = 15320.00  # Fallback safety buffer
@@ -124,10 +124,10 @@ with col_input_2:
             delta_color="inverse",
         )
 
-# 4. Strategic Buying Window & Market Guidance
-st.markdown("### 💡 Strategic Buying Window & Market Guidance")
+# 4. Strategic Buying Window & Market Guidance (Calendar & Seasonality Aware)
+st.markdown("### 💡 Strategic Buying Window & Seasonality Outlook")
 st.info(
-    "**Strategic Market Outlook:** While precise bottom-fishing dates cannot be mathematically guaranteed due to global macroeconomic volatility, statistical indicators show that a **near-term consolidation range (expected over the coming 4 to 8 weeks)** typically offers optimal entry points near support floors. Rather than buying all at once during sharp upward momentum, a phased accumulation approach within dip ranges optimizes overall cost averages."
+    "**Statistical & Seasonal Guidance:** While exact daily bottom-fishing cannot be guaranteed, historical Indian bullion cycles show that optimal dip-buying windows typically open during the **monsoon consolidation phase (July to September)**, when retail demand softens before the aggressive pre-festival and wedding season price rallies kick in from **October through January**. Accumulating phased tranches during these quarterly troughs minimizes volatility risk."
 )
 
 # 5. Interactive Historical Trend Line Chart
